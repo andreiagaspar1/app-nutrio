@@ -13,7 +13,7 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 
 	const handleContinue = () => {
 		if (!selectedGender) {
-			toast.warning('Please select a gender first');
+			toast.warning('Please select a gender first.');
 			return;
 		}
 		onNext();

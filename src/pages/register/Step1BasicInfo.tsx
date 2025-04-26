@@ -23,7 +23,6 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
 		setFormData(prev => ({ ...prev, [name]: value }));
-		// Clear error when user types
 		setErrors(prev => ({ ...prev, [name]: false }));
 	}
 
@@ -38,7 +37,7 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 
 		const isValid = !newErrors.name && !newErrors.email && !newErrors.password;
 		if (!isValid) {
-			toast.warning('Please fill in all the fields');
+			toast.warning('Please fill in all the fields.');
 		}
 		return isValid;
 	}
@@ -117,7 +116,7 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 						</div>
 					</div>
 
-					<div className='flex justify-center gap-2'>
+					<div className='mt-8 flex justify-center gap-2'>
 						<span className='w-2 h-2 rounded-full bg-green-300'></span>
 						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
 						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
