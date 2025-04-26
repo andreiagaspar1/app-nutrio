@@ -8,21 +8,21 @@ interface Step2GenderProps {
 }
 
 
-export const Step2Gender = ({ onNext, onPrevious }: Step2GenderProps) => {
-    const [selectedGender, setSelectedGender] = useState('');
-    
- const handleContinue = () => {
+export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
+	const [selectedGender, setSelectedGender] = useState('');
+
+	const handleContinue = () => {
 		if (!selectedGender) {
 			toast.warning('Please select a gender first');
 			return;
 		}
-		
-		onNext(); 
- };
+		onNext();
+	};
 
 	return (
 		<div className='min-w-[280px] px-4 flex flex-col items-center justify-center min-h-screen relative'>
 			<Toaster position='top-center' richColors />
+
 			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
 				<ArrowLeft size={18} />
 				<span>Previous</span>
@@ -35,7 +35,7 @@ export const Step2Gender = ({ onNext, onPrevious }: Step2GenderProps) => {
 			<div className='w-full max-w-[280px] sm:max-w-md space-y-6 text-left'>
 				<div>
 					<h2 className='text-neutral-800 text-lg font-semibold'>Select your Gender</h2>
-					<p className='text-neutral-600 text-sm'>You´re gender will affect your needs.</p>
+					<p className='text-neutral-600 text-sm'>Your gender will affect your needs.</p>
 				</div>
 
 				<div className='flex flex-col items-center py-14 gap-14'>
@@ -50,6 +50,7 @@ export const Step2Gender = ({ onNext, onPrevious }: Step2GenderProps) => {
 							</button>
 							<span className={`text-sm font-medium ${selectedGender === 'male' ? 'text-green-400' : 'text-neutral-600'} transition-colors`}>Male</span>
 						</div>
+
 						<div className='flex flex-col items-center space-y-2'>
 							<button
 								type='button'
@@ -70,11 +71,10 @@ export const Step2Gender = ({ onNext, onPrevious }: Step2GenderProps) => {
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
 				</div>
+
 				<button
-					className={`w-full py-2 px-4 bg-green-400 text-white rounded-md hover:bg-green-600 transition-colors cursor-pointer ${
-						selectedGender ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-					}`}
-					type='submit'
+					className={`w-full py-2 px-4 rounded-md transition-colors ${selectedGender ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+					type='button'
 					onClick={handleContinue}
 				>
 					Continue
@@ -82,4 +82,4 @@ export const Step2Gender = ({ onNext, onPrevious }: Step2GenderProps) => {
 			</div>
 		</div>
 	);
-};
+}
