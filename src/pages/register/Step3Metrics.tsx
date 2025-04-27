@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { Toaster, toast } from 'sonner';
 
-interface Step3Metrics {
+interface Step3MetricsProps {
 	onNext: () => void;
 	onPrevious: () => void;
 }
 
-export function Step3Metrics({ onNext, onPrevious }: Step3Metrics) {
+export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 	const [formData, setFormData] = useState({
 		age: '',
 		height: '',
