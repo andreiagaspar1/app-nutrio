@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft } from '@phosphor-icons/react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
+import {Link} from 'react-router'
 
 interface Step4GoalProps {
 	onNext: () => void;
@@ -19,16 +20,17 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 	};
 
 	return (
-		<div className='min-w-[280px] px-4 flex flex-col items-center justify-center min-h-screen relative'>
-			<Toaster position='top-center' richColors />
+		<>
 			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
 				<ArrowLeft size={18} />
 				<span>Previous</span>
 			</button>
 
-			<button type='button' className='text-neutral-600 text-sm cursor-pointer absolute top-6 right-6 sm:top-8 sm:right-8'>
-				Cancel
-			</button>
+			<Link to='/auth/login'>
+				<button type='button' className='text-neutral-600 text-sm cursor-pointer absolute top-6 right-6 sm:top-8 sm:right-8'>
+					Cancel
+				</button>
+			</Link>
 
 			<div className='w-full max-w-[280px] sm:max-w-md space-y-6 text-left'>
 				<div>
@@ -84,6 +86,6 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 					Continue
 				</button>
 			</div>
-		</div>
+		</>
 	);
 }

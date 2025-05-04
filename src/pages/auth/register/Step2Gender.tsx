@@ -1,36 +1,44 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GenderMale, GenderFemale, ArrowLeft } from '@phosphor-icons/react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
+import { Link } from 'react-router';
+import { useUserData } from '../../../contexts/registrationContext'
 
 interface Step2GenderProps {
-    onNext: () => void;
-    onPrevious: () => void;
+	onNext: () => void;
+	onPrevious: () => void;
 }
-
 
 export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 	const [selectedGender, setSelectedGender] = useState('');
+	const { setUserData } = useUserData(); // Access setUserData from context
 
 	const handleContinue = () => {
 		if (!selectedGender) {
 			toast.warning('Please select a gender first.');
 			return;
 		}
+
+		setUserData(prevData => ({
+			...prevData,
+			gender: selectedGender,
+		}));
+
 		onNext();
 	};
 
 	return (
-		<div className='min-w-[280px] px-4 flex flex-col items-center justify-center min-h-screen relative'>
-			<Toaster position='top-center' richColors />
-
+		<>
 			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
 				<ArrowLeft size={18} />
 				<span>Previous</span>
 			</button>
 
-			<button type='button' className='text-neutral-600 text-sm cursor-pointer absolute top-6 right-6 sm:top-8 sm:right-8'>
-				Cancel
-			</button>
+			<Link to='/auth/login'>
+				<button type='button' className='text-neutral-600 text-sm cursor-pointer absolute top-6 right-6 sm:top-8 sm:right-8'>
+					Cancel
+				</button>
+			</Link>
 
 			<div className='w-full max-w-[280px] sm:max-w-md space-y-6 text-left'>
 				<div>
@@ -66,7 +74,7 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 
 				<div className='flex justify-center gap-2'>
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-green-300'></span> {/* Active */}
+					<span className='w-2 h-2 rounded-full bg-green-300'></span>
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
 					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
@@ -80,6 +88,6 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 					Continue
 				</button>
 			</div>
-		</div>
+		</>
 	);
 }
