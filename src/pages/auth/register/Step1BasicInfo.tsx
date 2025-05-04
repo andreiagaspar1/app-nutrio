@@ -33,7 +33,7 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 		watch,
 	} = useForm<BasicInfoFormData>({
 		resolver: zodResolver(basicInfoSchema),
-		mode: 'onChange',
+		mode: 'onTouched',
 	});
 
 	const formValues = watch();
@@ -132,7 +132,7 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 					<button
 						type='submit'
 						disabled={!isValid || isSubmitting}
-						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500 cursor-pointer' : 'bg-green-300 text-white cursor-not-allowed'}`}
 					>
 						{isSubmitting ? 'Processing...' : 'Continue'}
 					</button>

@@ -1,5 +1,5 @@
 import {AppLayout} from '../_layouts/app'
 
-export function App() {
+export function HomePage() {
     return <AppLayout/>
 }

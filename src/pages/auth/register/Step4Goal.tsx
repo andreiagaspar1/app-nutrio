@@ -79,7 +79,7 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 				</div>
 
 				<button
-					className={`w-full py-2 px-4 rounded-md transition-colors ${activeButton ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+					className={`w-full py-2 px-4 rounded-md transition-colors ${activeButton ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-green-300 text-white cursor-not-allowed'}`}
 					type='button'
 					onClick={handleContinue}
 				>

@@ -81,7 +81,7 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 				</div>
 
 				<button
-					className={`w-full py-2 px-4 rounded-md transition-colors ${selectedGender ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+					className={`w-full py-2 px-4 rounded-md transition-colors ${selectedGender ? 'bg-green-400 text-white cursor-pointer hover:bg-green-500' : 'bg-green-300 text-white cursor-not-allowed'}`}
 					type='button'
 					onClick={handleContinue}
 				>

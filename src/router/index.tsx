@@ -5,11 +5,14 @@ import { Login } from '../pages/auth/login'
 import { Register } from '../pages/auth/register/Register'
 import { ForgotPassword } from '../pages/auth/forgot-password'
 import { ResetPassword } from '../pages/auth/reset-password'
+import {HomePage} from '../pages/app/home-page'
 
 export const router = createBrowserRouter([
     {
-        path: '', element: <AppLayout />,
-        children: []
+        path: 'app', element: <AppLayout />,
+        children: [
+            {path: 'home-page', element: <HomePage/>},
+        ]
      },
 	{
 		path: 'auth',

@@ -177,7 +177,7 @@ const onSubmit = (data: MetricsFormData) => {
 					<button
 						type='submit'
 						disabled={!isValid || isSubmitting}
-						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} mt-4`}
+						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500' : 'bg-green-300 text-white cursor-not-allowed'} mt-4`}
 					>
 						{isSubmitting ? 'Processing...' : 'Continue'}
 					</button>
