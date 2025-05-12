@@ -24,7 +24,7 @@ type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
 
 export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 	const [showPassword, setShowPassword] = useState(false);
-	const { setUserData } = useUserData();
+	const { userData, updateUserData } = useUserData();
 
 	const {
 		register,
@@ -36,14 +36,15 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 	});
 
 	const handleContinue = () => {
-		const formData = getValues();
+		const formData = getValues(); 
 
-		setUserData(prev => ({
-			...prev,
-			...formData,
-		}));
 		
-		onNext();
+		updateUserData({
+			...userData, 
+			...formData, 
+		});
+
+		onNext(); 
 	};
 
 	const togglePasswordVisibility = () => {

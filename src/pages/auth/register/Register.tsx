@@ -7,18 +7,14 @@ import { Step3Metrics } from './Step3Metrics';
 import { Step4Goal } from './Step4Goal';
 import { Step5Summary } from './Step5Summary';
 import { useNavigate } from 'react-router';
-import { useUserData,  } from '../../../contexts/registrationContext';
-import { UserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/registrationContext';
 
 export function Register() {
 	const [currentStep, setCurrentStep] = useState(1);
 	const navigate = useNavigate();
 
-	const { userData, setUserData } = useUserData();
-
-	const handleFormDataChange = (newData: Partial<UserData>) => {
-		setUserData(prev => ({ ...prev, ...newData }));
-	};
+	
+	const { userData } = useUserData();
 
 	function handleNextStep() {
 		setCurrentStep(prev => prev + 1);
@@ -27,7 +23,6 @@ export function Register() {
 	function handlePreviousStep() {
 		setCurrentStep(prev => prev - 1);
 	}
-	
 
 	const handleFinalSubmit = async () => {
 		const { name, email, password, gender, activity, age, height, weight, goal, calories, proteins, carbs, fats } = userData;
@@ -60,10 +55,10 @@ export function Register() {
 
 	return (
 		<div>
-			{currentStep === 1 && <Step1BasicInfo onNext={handleNextStep}/>}
-			{currentStep === 2 && <Step2Gender onNext={handleNextStep} onPrevious={handlePreviousStep} onChange={handleFormDataChange} />}
+			{currentStep === 1 && <Step1BasicInfo onNext={handleNextStep} />}
+			{currentStep === 2 && <Step2Gender onNext={handleNextStep} onPrevious={handlePreviousStep} />}
 			{currentStep === 3 && <Step3Metrics onNext={handleNextStep} onPrevious={handlePreviousStep} />}
-			{currentStep === 4 && <Step4Goal onNext={handleNextStep} onPrevious={handlePreviousStep} onChange={handleFormDataChange} />}
+			{currentStep === 4 && <Step4Goal onNext={handleNextStep} onPrevious={handlePreviousStep} />}
 			{currentStep === 5 && <Step5Summary onPrevious={handlePreviousStep} onSubmit={handleFinalSubmit} />}
 		</div>
 	);

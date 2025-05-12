@@ -2,18 +2,16 @@ import { useState } from 'react';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Link } from 'react-router';
-import { useUserData } from '../../../contexts/registrationContext'; 
-import { UserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/registrationContext';
 
 interface Step4GoalProps {
 	onNext: () => void;
 	onPrevious: () => void;
-	onChange: (newData: Partial<UserData>) => void;
 }
 
 export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
-	const [activeButton, setActiveButton] = useState<string | null>(null);
-	const { setUserData } = useUserData(); 
+	const { userData, updateUserData } = useUserData(); 
+	const [activeButton, setActiveButton] = useState<string | null>(userData.goal || null); 
 
 	const handleContinue = () => {
 		if (!activeButton) {
@@ -22,13 +20,12 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 		}
 
 		
-		setUserData(prevData => ({
-			...prevData,
+		updateUserData({
+			...userData, 
 			goal: activeButton, 
-		}));
+		});
 
-		
-		onNext();
+		onNext(); 
 	};
 
 	return (
@@ -60,7 +57,10 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 							checked={activeButton === 'lose'}
 							onChange={() => {
 								setActiveButton('lose');
-								setUserData(prev => ({ ...prev, goal: 'lose' }));
+								updateUserData({
+									...userData,
+									goal: 'lose', 
+								});
 							}}
 							className='hidden'
 						/>
@@ -81,11 +81,14 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 							name='goal'
 							value='maintain'
 							checked={activeButton === 'maintain'}
-							className='hidden'
 							onChange={() => {
 								setActiveButton('maintain');
-								setUserData(prev => ({ ...prev, goal: 'maintain' }));
+								updateUserData({
+									...userData,
+									goal: 'maintain', 
+								});
 							}}
+							className='hidden'
 						/>
 						<label
 							htmlFor='maintain'
@@ -104,11 +107,14 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 							name='goal'
 							value='build'
 							checked={activeButton === 'build'}
-							className='hidden'
 							onChange={() => {
 								setActiveButton('build');
-								setUserData(prev => ({ ...prev, goal: 'build' }));
+								updateUserData({
+									...userData,
+									goal: 'build', 
+								});
 							}}
+							className='hidden'
 						/>
 						<label
 							htmlFor='build'

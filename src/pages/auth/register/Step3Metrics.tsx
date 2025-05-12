@@ -4,12 +4,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserData } from '../../../contexts/registrationContext';
-
+import { UserData } from '../../../contexts/registrationContext';
 
 interface Step3MetricsProps {
 	onNext: () => void;
 	onPrevious: () => void;
-
 }
 
 const metricsSchema = z.object({
@@ -58,11 +57,18 @@ export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 		mode: 'onChange',
 	});
 
-	const { setUserData } = useUserData();
+	
+	const { userData, updateUserData } = useUserData();
 
+	
 	const handleContinue = () => {
 		handleSubmit((data: MetricsFormData) => {
-			const updatedData = {
+			
+			if (!isValid) return;
+
+			
+			const updatedData: UserData = {
+				...userData, 
 				age: parseInt(data.age, 10),
 				height: parseInt(data.height, 10),
 				weight: parseInt(data.weight, 10),
@@ -70,17 +76,16 @@ export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 			};
 
 			
-			setUserData(prevData => ({
-				...prevData,
-				...updatedData,
-			}));
+			updateUserData(updatedData);
 
-			onNext(); 
+			
+			onNext();
 		})();
 	};
 
 	return (
 		<>
+			
 			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
 				<ArrowLeft size={18} />
 				<span>Previous</span>
@@ -98,6 +103,7 @@ export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 					<p className='text-neutral-600 text-sm'>Essential data for personalized results.</p>
 				</div>
 
+				
 				<form noValidate className='space-y-4'>
 					<div className='space-y-4'>
 						<div>
@@ -170,12 +176,14 @@ export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 						</div>
 					</div>
 
+					
 					<div className='mt-6 flex justify-center gap-2'>
 						{[1, 2, 3, 4, 5].map(step => (
 							<span key={step} className={`w-2 h-2 rounded-full ${step === 3 ? 'bg-green-300' : 'bg-neutral-300'}`} />
 						))}
 					</div>
 
+					
 					<button
 						type='button'
 						onClick={handleContinue}
