@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GenderMale, GenderFemale, ArrowLeft } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Link } from 'react-router';
-import { useUserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/authContexts/registrationContext';
 
 interface Step2GenderProps {
 	onNext: () => void;
@@ -10,8 +10,8 @@ interface Step2GenderProps {
 }
 
 export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
-	const { userData, updateUserData } = useUserData(); 
-	const [selectedGender, setSelectedGender] = useState<string | null>(userData.gender || ''); 
+	const { userData, updateUserData } = useUserData();
+	const [selectedGender, setSelectedGender] = useState<string | null>(userData.gender || '');
 
 	const handleContinue = () => {
 		if (!selectedGender) {
@@ -19,13 +19,12 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 			return;
 		}
 
-		
 		updateUserData({
-			...userData, 
-			gender: selectedGender, 
+			...userData,
+			gender: selectedGender,
 		});
 
-		onNext(); 
+		onNext();
 	};
 
 	return (

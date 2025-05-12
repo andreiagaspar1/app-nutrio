@@ -2,7 +2,7 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import proteinIcon from '../../../assets/register-logos/protein.png';
 import carbsIcon from '../../../assets/register-logos/carbs.png';
 import fatsIcon from '../../../assets/register-logos/avocado.png';
-import { useUserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/authContexts/registrationContext';
 import { MacroDisplay } from '../../../components/MacroDisplay';
 
 interface Step5SummaryProps {
@@ -14,7 +14,6 @@ interface Step5SummaryProps {
 export function Step5Summary({ onPrevious, onSubmit, isSubmitting }: Step5SummaryProps) {
 	const { userData } = useUserData();
 
-	
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		onSubmit();
@@ -46,27 +45,14 @@ export function Step5Summary({ onPrevious, onSubmit, isSubmitting }: Step5Summar
 					</div>
 
 					<div className='grid grid-cols-3 gap-4'>
-						<MacroDisplay
-							value={userData.proteins}
-							label='Protein'
-							icon={proteinIcon}
-							iconClass='h-8 w-8' />
+						<MacroDisplay value={userData.proteins} label='Protein' icon={proteinIcon} iconClass='h-8 w-8' />
 
-						<MacroDisplay
-							value={userData.carbs}
-							label='Carbs'
-							icon={carbsIcon}
-							iconClass='h-10 w-10' />
+						<MacroDisplay value={userData.carbs} label='Carbs' icon={carbsIcon} iconClass='h-10 w-10' />
 
-						<MacroDisplay
-							value={userData.fats}
-							label='Fats'
-							icon={fatsIcon}
-							iconClass='h-8 w-8' />
+						<MacroDisplay value={userData.fats} label='Fats' icon={fatsIcon} iconClass='h-8 w-8' />
 					</div>
 				</div>
 
-				
 				<div className='mt-6 flex justify-center gap-2'>
 					{[1, 2, 3, 4, 5].map(step => (
 						<span key={step} className={`w-2 h-2 rounded-full ${step === 5 ? 'bg-green-300' : 'bg-neutral-300'}`} />

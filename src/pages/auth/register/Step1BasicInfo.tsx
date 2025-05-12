@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useUserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/authContexts/registrationContext';
 
 interface Step1BasicInfoProps {
 	onNext: () => void;
@@ -36,15 +36,14 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 	});
 
 	const handleContinue = () => {
-		const formData = getValues(); 
+		const formData = getValues();
 
-		
 		updateUserData({
-			...userData, 
-			...formData, 
+			...userData,
+			...formData,
 		});
 
-		onNext(); 
+		onNext();
 	};
 
 	const togglePasswordVisibility = () => {

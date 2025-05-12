@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Link } from 'react-router';
-import { useUserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/authContexts/registrationContext';
 
 interface Step4GoalProps {
 	onNext: () => void;
@@ -10,8 +10,8 @@ interface Step4GoalProps {
 }
 
 export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
-	const { userData, updateUserData } = useUserData(); 
-	const [activeButton, setActiveButton] = useState<string | null>(userData.goal || null); 
+	const { userData, updateUserData } = useUserData();
+	const [activeButton, setActiveButton] = useState<string | null>(userData.goal || null);
 
 	const handleContinue = () => {
 		if (!activeButton) {
@@ -19,13 +19,12 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 			return;
 		}
 
-		
 		updateUserData({
-			...userData, 
-			goal: activeButton, 
+			...userData,
+			goal: activeButton,
 		});
 
-		onNext(); 
+		onNext();
 	};
 
 	return (
@@ -59,7 +58,7 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 								setActiveButton('lose');
 								updateUserData({
 									...userData,
-									goal: 'lose', 
+									goal: 'lose',
 								});
 							}}
 							className='hidden'
@@ -85,7 +84,7 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 								setActiveButton('maintain');
 								updateUserData({
 									...userData,
-									goal: 'maintain', 
+									goal: 'maintain',
 								});
 							}}
 							className='hidden'
@@ -111,7 +110,7 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 								setActiveButton('build');
 								updateUserData({
 									...userData,
-									goal: 'build', 
+									goal: 'build',
 								});
 							}}
 							className='hidden'

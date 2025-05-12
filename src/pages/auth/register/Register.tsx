@@ -7,13 +7,12 @@ import { Step3Metrics } from './Step3Metrics';
 import { Step4Goal } from './Step4Goal';
 import { Step5Summary } from './Step5Summary';
 import { useNavigate } from 'react-router';
-import { useUserData } from '../../../contexts/registrationContext';
+import { useUserData } from '../../../contexts/authContexts/registrationContext';
 
 export function Register() {
 	const [currentStep, setCurrentStep] = useState(1);
 	const navigate = useNavigate();
 
-	
 	const { userData } = useUserData();
 
 	function handleNextStep() {
