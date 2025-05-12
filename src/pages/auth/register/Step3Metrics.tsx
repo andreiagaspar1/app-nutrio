@@ -3,11 +3,13 @@ import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUserData } from '../../../contexts/registrationContext'; // Import the context
+import { useUserData } from '../../../contexts/registrationContext';
+
 
 interface Step3MetricsProps {
 	onNext: () => void;
 	onPrevious: () => void;
+
 }
 
 const metricsSchema = z.object({
@@ -56,25 +58,27 @@ export function Step3Metrics({ onNext, onPrevious }: Step3MetricsProps) {
 		mode: 'onChange',
 	});
 
-	const { setUserData } = useUserData(); 
-const onSubmit = (data: MetricsFormData) => {
-	
-	const updatedData = {
-		age: parseInt(data.age, 10),
-		height: parseInt(data.height, 10),
-		weight: parseInt(data.weight, 10),
-		activity: data.activity,
+	const { setUserData } = useUserData();
+
+	const handleContinue = () => {
+		handleSubmit((data: MetricsFormData) => {
+			const updatedData = {
+				age: parseInt(data.age, 10),
+				height: parseInt(data.height, 10),
+				weight: parseInt(data.weight, 10),
+				activity: data.activity,
+			};
+
+			
+			setUserData(prevData => ({
+				...prevData,
+				...updatedData,
+			}));
+
+			onNext(); 
+		})();
 	};
 
-	
-	setUserData(prevData => ({
-		...prevData,
-		...updatedData,
-	}));
-
-	
-	onNext();
-};
 	return (
 		<>
 			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
@@ -94,7 +98,7 @@ const onSubmit = (data: MetricsFormData) => {
 					<p className='text-neutral-600 text-sm'>Essential data for personalized results.</p>
 				</div>
 
-				<form onSubmit={handleSubmit(onSubmit)} noValidate className='space-y-4'>
+				<form noValidate className='space-y-4'>
 					<div className='space-y-4'>
 						<div>
 							<label htmlFor='age' className='block text-sm font-medium text-neutral-800 text-left mb-1'>
@@ -167,15 +171,14 @@ const onSubmit = (data: MetricsFormData) => {
 					</div>
 
 					<div className='mt-6 flex justify-center gap-2'>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-green-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
+						{[1, 2, 3, 4, 5].map(step => (
+							<span key={step} className={`w-2 h-2 rounded-full ${step === 3 ? 'bg-green-300' : 'bg-neutral-300'}`} />
+						))}
 					</div>
 
 					<button
-						type='submit'
+						type='button'
+						onClick={handleContinue}
 						disabled={!isValid || isSubmitting}
 						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500' : 'bg-green-300 text-white cursor-not-allowed'} mt-4`}
 					>

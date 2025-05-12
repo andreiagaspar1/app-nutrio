@@ -1,21 +1,33 @@
 import { useState } from 'react';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { toast } from 'sonner';
-import {Link} from 'react-router'
+import { Link } from 'react-router';
+import { useUserData } from '../../../contexts/registrationContext'; 
+import { UserData } from '../../../contexts/registrationContext';
 
 interface Step4GoalProps {
 	onNext: () => void;
 	onPrevious: () => void;
+	onChange: (newData: Partial<UserData>) => void;
 }
 
 export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 	const [activeButton, setActiveButton] = useState<string | null>(null);
+	const { setUserData } = useUserData(); 
 
 	const handleContinue = () => {
 		if (!activeButton) {
 			toast.warning('Please select your goal.');
 			return;
 		}
+
+		
+		setUserData(prevData => ({
+			...prevData,
+			goal: activeButton, 
+		}));
+
+		
 		onNext();
 	};
 
@@ -39,43 +51,80 @@ export function Step4Goal({ onNext, onPrevious }: Step4GoalProps) {
 				</div>
 
 				<div className='mt-10 mb-10 space-y-4'>
-					<button
-						type='button'
-						className={`mt-1 block w-full px-3 py-2 rounded-md focus:outline-none ${
-							activeButton === 'lose' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
-						}`}
-						onClick={() => setActiveButton('lose')}
-					>
-						Lose Weight
-					</button>
+					<div className='flex items-center'>
+						<input
+							type='radio'
+							id='lose'
+							name='goal'
+							value='lose'
+							checked={activeButton === 'lose'}
+							onChange={() => {
+								setActiveButton('lose');
+								setUserData(prev => ({ ...prev, goal: 'lose' }));
+							}}
+							className='hidden'
+						/>
+						<label
+							htmlFor='lose'
+							className={`cursor-pointer w-full px-3 py-2.5 rounded-md flex justify-center items-center text-sm font-medium focus:outline-none ${
+								activeButton === 'lose' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
+							}`}
+						>
+							Lose Weight
+						</label>
+					</div>
 
-					<button
-						type='button'
-						className={`mt-1 block w-full px-3 py-2 rounded-md focus:outline-none ${
-							activeButton === 'maintain' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
-						}`}
-						onClick={() => setActiveButton('maintain')}
-					>
-						Maintenance
-					</button>
+					<div className='flex items-center'>
+						<input
+							type='radio'
+							id='maintain'
+							name='goal'
+							value='maintain'
+							checked={activeButton === 'maintain'}
+							className='hidden'
+							onChange={() => {
+								setActiveButton('maintain');
+								setUserData(prev => ({ ...prev, goal: 'maintain' }));
+							}}
+						/>
+						<label
+							htmlFor='maintain'
+							className={`cursor-pointer w-full px-3 py-2.5 rounded-md flex justify-center items-center text-sm font-medium focus:outline-none ${
+								activeButton === 'maintain' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
+							}`}
+						>
+							Maintenance
+						</label>
+					</div>
 
-					<button
-						type='button'
-						className={`mt-1 block w-full px-3 py-2 rounded-md focus:outline-none ${
-							activeButton === 'build' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
-						}`}
-						onClick={() => setActiveButton('build')}
-					>
-						Build Muscle
-					</button>
+					<div className='flex items-center'>
+						<input
+							type='radio'
+							id='build'
+							name='goal'
+							value='build'
+							checked={activeButton === 'build'}
+							className='hidden'
+							onChange={() => {
+								setActiveButton('build');
+								setUserData(prev => ({ ...prev, goal: 'build' }));
+							}}
+						/>
+						<label
+							htmlFor='build'
+							className={`cursor-pointer w-full px-3 py-2.5 rounded-md flex justify-center items-center text-sm font-medium focus:outline-none ${
+								activeButton === 'build' ? 'bg-neutral-400 text-white border-transparent' : 'text-neutral-400 border border-neutral-500'
+							}`}
+						>
+							Build Muscle
+						</label>
+					</div>
 				</div>
 
 				<div className='mt-6 flex justify-center gap-2'>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-green-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
+					{[1, 2, 3, 4, 5].map(step => (
+						<span key={step} className={`w-2 h-2 rounded-full ${step === 4 ? 'bg-green-300' : 'bg-neutral-300'}`} />
+					))}
 				</div>
 
 				<button

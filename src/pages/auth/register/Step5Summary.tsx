@@ -1,93 +1,90 @@
-
 import { ArrowLeft } from '@phosphor-icons/react';
-import proteinIcon from '../../../assets/register-logos/protein.png'
-import carbsIcon from '../../../assets/register-logos/carbs.png'
-import fatsIcon from '../../../assets/register-logos/avocado.png'
-import {Link} from 'react-router'
+import proteinIcon from '../../../assets/register-logos/protein.png';
+import carbsIcon from '../../../assets/register-logos/carbs.png';
+import fatsIcon from '../../../assets/register-logos/avocado.png';
+import { useUserData } from '../../../contexts/registrationContext';
+import { MacroDisplay } from '../../../components/MacroDisplay';
 
 interface Step5SummaryProps {
 	onPrevious: () => void;
+	onSubmit: () => void;
+	isSubmitting?: boolean;
 }
 
+export function Step5Summary({ onPrevious, onSubmit, isSubmitting }: Step5SummaryProps) {
+	const { userData } = useUserData();
 
-
-export function Step5Summary({onPrevious} : Step5SummaryProps) {
 	
-	const nutritionData = {
-		calories: 1705,
-		proteins: 120,
-		carbs: 225,
-		fats: 36,
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		onSubmit();
 	};
 
 	return (
-		<>
-			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious}>
+		<div>
+			<button type='button' className='text-neutral-600 text-sm cursor-pointer flex items-center gap-1 absolute top-6 left-6 sm:top-8 sm:left-8' onClick={onPrevious} disabled={isSubmitting}>
 				<ArrowLeft size={18} />
 				<span>Previous</span>
 			</button>
 
-			<div className='w-full max-w-[280px] sm:max-w-md space-y-6 text-left'>
-				<div>
-					<h1 className='text-neutral-800 text-2xl font-semibold'>Welcome, Name</h1>
-					<p className='text-neutral-600 mt-2'>Here is your daily nutrition needs!</p>
+			<div className='w-full max-w-[280px] sm:max-w-md space-y-5 text-left'>
+				<div className='mb-8'>
+					<h2 className='text-neutral-800 text-2xl font-semibold'>Welcome, {userData.name}</h2>
+					<p className='text-neutral-600 text-sm'>Here's your daily nutrition needs!</p>
 				</div>
-				<div className='space-y-6'>
-					<div className='border border-neutral-500 rounded-md p-6 text-center'>
+
+				<div className='space-y-7'>
+					<div className='border border-neutral-500 rounded-md p-6 text-center flex flex-col items-center'>
 						<p className='text-neutral-500 text-sm'>Total</p>
-						<p className='text-3xl font-semibold text-neutral-800'>1,705</p>
+						<input
+							type='number'
+							value={userData.calories}
+							readOnly
+							className='text-3xl font-semibold text-neutral-800 text-center border-none focus:outline-none bg-transparent w-[5ch] leading-none'
+						/>
 						<p className='text-neutral-400 text-sm'>Kcal</p>
 					</div>
 
-					<div className='grid grid-cols-3 gap-4 text-center'>
-						<div className='relative'>
-							<div className='absolute -top-4 left-1/2 transform -translate-x-1/2'>
-								<img src={proteinIcon} alt='Protein' className='h-8 w-8 object-contain' />
-							</div>
-							<div className='border border-neutral-500 rounded-md p-4 pt-8 aspect-square flex flex-col justify-center items-center'>
-								<p className='text-lg font-semibold text-neutral-800'>120g</p>
-								<p className='text-neutral-500 text-sm'>Protein</p>
-							</div>
-						</div>
+					<div className='grid grid-cols-3 gap-4'>
+						<MacroDisplay
+							value={userData.proteins}
+							label='Protein'
+							icon={proteinIcon}
+							iconClass='h-8 w-8' />
 
-						<div className='relative'>
-							<div className='absolute -top-4 left-1/2 transform -translate-x-1/2'>
-								<img src={carbsIcon} alt='Carbs' className='h-10 w-10 object-contain' />
-							</div>
-							<div className='border border-neutral-500 rounded-md p-4 pt-8 aspect-square flex flex-col justify-center items-center'>
-								<p className='text-lg font-semibold text-neutral-800'>225g</p>
-								<p className='text-neutral-500 text-sm'>Carbs</p>
-							</div>
-						</div>
+						<MacroDisplay
+							value={userData.carbs}
+							label='Carbs'
+							icon={carbsIcon}
+							iconClass='h-10 w-10' />
 
-						<div className='relative'>
-							<div className='absolute -top-4 left-1/2 transform -translate-x-1/2'>
-								<img src={fatsIcon} alt='Fats' className='h-8 w-8 object-contain' />
-							</div>
-							<div className='border border-neutral-500 rounded-md p-4 pt-8 aspect-square flex flex-col justify-center items-center'>
-								<p className='text-lg font-semibold text-neutral-800'>36g</p>
-								<p className='text-neutral-500 text-sm'>Fats</p>
-							</div>
-						</div>
+						<MacroDisplay
+							value={userData.fats}
+							label='Fats'
+							icon={fatsIcon}
+							iconClass='h-8 w-8' />
 					</div>
 				</div>
 
+				
 				<div className='mt-6 flex justify-center gap-2'>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-green-300'></span>
+					{[1, 2, 3, 4, 5].map(step => (
+						<span key={step} className={`w-2 h-2 rounded-full ${step === 5 ? 'bg-green-300' : 'bg-neutral-300'}`} />
+					))}
 				</div>
 
-				<Link to='/app/home-page'>
-					<button className={`w-full mt-8 py-3 px-4 rounded-md bg-green-400 text-white flex items-center justify-center gap-2 hover:bg-green-500 transition-colors cursor-pointer`} type='button'>
-						<span>Start now</span>
+				<form onSubmit={handleSubmit}>
+					<button
+						type='submit'
+						disabled={isSubmitting}
+						className={`w-full mt-8 py-2 px-4 rounded-md text-white flex items-center justify-center gap-2 transition-colors ${
+							isSubmitting ? 'bg-green-300 cursor-wait' : 'bg-green-400 hover:bg-green-500 cursor-pointer'
+						}`}
+					>
+						{isSubmitting ? 'Creating account...' : 'Start now'}
 					</button>
-				</Link>
+				</form>
 			</div>
-		</>
+		</div>
 	);
 }
-
-

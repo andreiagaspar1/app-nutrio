@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { GenderMale, GenderFemale, ArrowLeft } from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { Link } from 'react-router';
-import { useUserData } from '../../../contexts/registrationContext'
+import { useUserData } from '../../../contexts/registrationContext';
+import { UserData } from '../../../contexts/registrationContext';
 
 interface Step2GenderProps {
 	onNext: () => void;
 	onPrevious: () => void;
+	onChange: (newData: Partial<UserData>) => void;
 }
 
 export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
-	const [selectedGender, setSelectedGender] = useState('');
-	const { setUserData } = useUserData(); // Access setUserData from context
+	const { setUserData } = useUserData();
+	const [selectedGender, setSelectedGender] = useState<string | null>('');
 
 	const handleContinue = () => {
 		if (!selectedGender) {
@@ -19,9 +21,10 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 			return;
 		}
 
+	
 		setUserData(prevData => ({
 			...prevData,
-			gender: selectedGender,
+			gender: selectedGender, 
 		}));
 
 		onNext();
@@ -49,35 +52,27 @@ export function Step2Gender({ onNext, onPrevious }: Step2GenderProps) {
 				<div className='flex flex-col items-center py-14 gap-14'>
 					<div className='flex gap-8'>
 						<div className='flex flex-col items-center space-y-2'>
-							<button
-								type='button'
-								className={`w-18 h-18 rounded-full p-0 border-1 flex items-center justify-center ${selectedGender === 'male' ? 'border-green-400' : 'border-neutral-500'} transition-colors`}
-								onClick={() => setSelectedGender('male')}
-							>
+							<label className={`w-18 h-18 rounded-full p-0 flex items-center justify-center border-1 ${selectedGender === 'male' ? 'border-green-400' : 'border-neutral-500'} transition-colors`}>
+								<input type='radio' name='gender' value='male' className='hidden' onChange={() => setSelectedGender('male')} checked={selectedGender === 'male'} />
 								<GenderMale size={30} className={`${selectedGender === 'male' ? 'text-green-400' : 'text-neutral-600'}`} />
-							</button>
+							</label>
 							<span className={`text-sm font-medium ${selectedGender === 'male' ? 'text-green-400' : 'text-neutral-600'} transition-colors`}>Male</span>
 						</div>
 
 						<div className='flex flex-col items-center space-y-2'>
-							<button
-								type='button'
-								className={`w-18 h-18 rounded-full p-0 border-1 flex items-center justify-center ${selectedGender === 'female' ? 'border-green-400' : 'border-neutral-500'} transition-colors`}
-								onClick={() => setSelectedGender('female')}
-							>
+							<label className={`w-18 h-18 rounded-full p-0 flex items-center justify-center border-1 ${selectedGender === 'female' ? 'border-green-400' : 'border-neutral-500'} transition-colors`}>
+								<input type='radio' name='gender' value='female' className='hidden' onChange={() => setSelectedGender('female')} checked={selectedGender === 'female'} />
 								<GenderFemale size={30} className={`${selectedGender === 'female' ? 'text-green-400' : 'text-neutral-600'}`} />
-							</button>
+							</label>
 							<span className={`text-sm font-medium ${selectedGender === 'female' ? 'text-green-400' : 'text-neutral-600'} transition-colors`}>Female</span>
 						</div>
 					</div>
 				</div>
 
-				<div className='flex justify-center gap-2'>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-green-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-					<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
+				<div className='mt-6 flex justify-center gap-2'>
+					{[1, 2, 3, 4, 5].map(step => (
+						<span key={step} className={`w-2 h-2 rounded-full ${step === 2 ? 'bg-green-300' : 'bg-neutral-300'}`} />
+					))}
 				</div>
 
 				<button

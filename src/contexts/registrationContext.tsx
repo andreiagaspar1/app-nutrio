@@ -1,38 +1,56 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
-interface UserData {
-	gender: string | null;
-	age: number | null;
-	height: number | null;
-	weight: number | null;
-	activityLevel: string | null;
-	goal: string | null;
+export interface UserData {
+	name: string;
+	email: string;
+	password: string;
+	gender: string;
+	activity: string;
+	age: number;
+	height: number;
+	weight: number;
+	goal: string;
+	calories: number;
+	proteins: number;
+	carbs: number;
+	fats: number;
 }
 
-interface UserDataContextProps {
+interface UserDataContextType {
 	userData: UserData;
-	setUserData: React.Dispatch<React.SetStateAction<UserData>>;
+	setUserData: Dispatch<SetStateAction<UserData>>;
 }
 
-const UserDataContext = createContext<UserDataContextProps | undefined>(undefined);
 
-export const UserDataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const [userData, setUserData] = useState<UserData>({
-		gender: null,
-		age: null,
-		height: null,
-		weight: null,
-		activityLevel: null,
-		goal: null,
-	});
+const UserDataContext = createContext<UserDataContextType | undefined>(undefined);
 
-	return <UserDataContext.Provider value={{ userData, setUserData }}>{children}</UserDataContext.Provider>;
-};
 
-export const useUserData = (): UserDataContextProps => {
+export const useUserData = () => {
 	const context = useContext(UserDataContext);
 	if (!context) {
 		throw new Error('useUserData must be used within a UserDataProvider');
 	}
 	return context;
+};
+
+
+export const UserDataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+	
+	const [userData, setUserData] = useState<UserData>({
+		name: '',
+		email: '',
+		password: '',
+		gender: '',
+		activity: '',
+		age: 0,
+		height: 0,
+		weight: 0,
+		goal: '',
+		calories: 1705,
+		proteins: 120,
+		carbs: 225,
+		fats: 36,
+	});
+
+	return <UserDataContext.Provider value={{ userData, setUserData }}>{children}</UserDataContext.Provider>;
 };

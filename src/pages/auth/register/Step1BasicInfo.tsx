@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useUserData } from '../../../contexts/registrationContext'; // Import the context
+import { useUserData } from '../../../contexts/registrationContext';
 
 interface Step1BasicInfoProps {
 	onNext: () => void;
@@ -24,31 +24,30 @@ type BasicInfoFormData = z.infer<typeof basicInfoSchema>;
 
 export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 	const [showPassword, setShowPassword] = useState(false);
-	const { setUserData } = useUserData(); 
+	const { setUserData } = useUserData();
 
 	const {
 		register,
-		handleSubmit,
-		formState: { errors, isValid, isSubmitting },
-		watch,
+		formState: { errors, isValid },
+		getValues,
 	} = useForm<BasicInfoFormData>({
 		resolver: zodResolver(basicInfoSchema),
-		mode: 'onTouched',
+		mode: 'onChange',
 	});
 
-	const formValues = watch();
+	const handleContinue = () => {
+		const formData = getValues();
 
-	function togglePasswordVisibility() {
-		setShowPassword(prev => !prev);
-	}
-
-	const onSubmit = (data: BasicInfoFormData) => {
-		setUserData(prevData => ({
-			...prevData,
-			...data, 
+		setUserData(prev => ({
+			...prev,
+			...formData,
 		}));
-
+		
 		onNext();
+	};
+
+	const togglePasswordVisibility = () => {
+		setShowPassword(prev => !prev);
 	};
 
 	return (
@@ -65,7 +64,7 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 					<p className='text-neutral-600 text-sm'>Let's start with your basic info.</p>
 				</div>
 
-				<form onSubmit={handleSubmit(onSubmit)} noValidate className='space-y-4'>
+				<form noValidate className='space-y-4'>
 					<div className='space-y-4'>
 						<div>
 							<label htmlFor='name' className='block text-sm font-medium text-neutral-800 text-left mb-1'>
@@ -114,27 +113,26 @@ export function Step1BasicInfo({ onNext }: Step1BasicInfoProps) {
 									{...register('password')}
 								/>
 								<button type='button' className='absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500' onClick={togglePasswordVisibility}>
-									{showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+									{showPassword ? <Eye size={20} /> : <EyeSlash size={20} />}
 								</button>
 							</div>
 							{errors.password && <p className='mt-1 text-sm text-red-500'>{errors.password.message}</p>}
 						</div>
 					</div>
 
-					<div className='mt-8 flex justify-center gap-2'>
-						<span className='w-2 h-2 rounded-full bg-green-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
-						<span className='w-2 h-2 rounded-full bg-neutral-300'></span>
+					<div className='mt-6 flex justify-center gap-2'>
+						{[1, 2, 3, 4, 5].map(step => (
+							<span key={step} className={`w-2 h-2 rounded-full ${step === 1 ? 'bg-green-300' : 'bg-neutral-300'}`} />
+						))}
 					</div>
 
 					<button
-						type='submit'
-						disabled={!isValid || isSubmitting}
+						type='button'
+						disabled={!isValid}
+						onClick={handleContinue}
 						className={`w-full py-2 px-4 rounded-md transition-colors ${isValid ? 'bg-green-400 text-white hover:bg-green-500 cursor-pointer' : 'bg-green-300 text-white cursor-not-allowed'}`}
 					>
-						{isSubmitting ? 'Processing...' : 'Continue'}
+						Continue
 					</button>
 				</form>
 			</div>
