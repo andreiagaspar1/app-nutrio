@@ -4,15 +4,18 @@ import { RouterProvider } from 'react-router';
 import { Toaster } from 'sonner';
 import { router } from './router';
 import { UserDataProvider } from './contexts/authContexts/registrationContext';
-import { EmailProvider } from './contexts/authContexts/passwordForgotContext'; // Importe o EmailProvider
+import { EmailProvider } from './contexts/authContexts/passwordForgotContext'; 
+import {RecipeProvider} from './contexts/appContexts/recipesContext'
 import './styles/global.css';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<UserDataProvider>
 			<EmailProvider>
-				<RouterProvider router={router} />
-				<Toaster richColors />
+				<RecipeProvider>
+					<RouterProvider router={router} />
+					<Toaster richColors />
+				</RecipeProvider>
 			</EmailProvider>
 		</UserDataProvider>
 	</StrictMode>,
