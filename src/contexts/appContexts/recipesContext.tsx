@@ -24,7 +24,7 @@ import roastedChickenFull from '../../assets/recipes-images/Roasted_Chicken_full
 import tunaWrapsThumb from '../../assets/recipes-images/mediterranean_tuna_wrap_thumb.jpg';
 import tunaWrapsFull from '../../assets/recipes-images/Tuna_wrap_full.jpg';
 
-interface Recipe {
+export interface Recipe {
 	id: number;
 	name: string;
 	kcal: number;
@@ -99,7 +99,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 			name: 'Cheesy Spinach Scrambled Eggs',
 			kcal: 245,
 			image: {
-				thumbnail: scrambledEggsThumb, 
+				thumbnail: scrambledEggsThumb,
 				full: scrambledEggsFull,
 			},
 			category: 'Breakfast',
@@ -210,7 +210,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 			kcal: 210,
 			image: {
 				thumbnail: chiaPuddingThumb,
-				full: chiaPuddingFull
+				full: chiaPuddingFull,
 			},
 			category: 'Snacks',
 			ingredients: [
@@ -237,7 +237,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 			name: 'Cottage Cheese Toast w/ Cherry Tomatoes',
 			kcal: 178,
 			image: {
-			    thumbnail: cottageToastThumb,
+				thumbnail: cottageToastThumb,
 				full: cottageToastFull,
 			},
 			category: 'Snacks',
@@ -369,7 +369,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 			kcal: 362,
 			image: {
 				thumbnail: tunaWrapsThumb,
-				full: tunaWrapsFull
+				full: tunaWrapsFull,
 			},
 			category: 'Main Meals',
 			ingredients: [
@@ -396,39 +396,36 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 	];
 
 	const [selectedCategory, setSelectedCategory] = useState('Breakfast');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredRecipes = allRecipes.filter(recipe => {
-    const matchCategory = recipe.category === selectedCategory;
-    const matchSearch = recipe.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+	const filteredRecipes = allRecipes.filter(recipe => {
+		const matchCategory = recipe.category === selectedCategory;
+		const matchSearch = recipe.name.toLowerCase().includes(searchTerm.toLowerCase());
+		return matchCategory && matchSearch;
+	});
 
-  const value: RecipeContextType = {
-    allRecipes,
-    selectedCategory,
-    setSelectedCategory,
-    searchTerm,
-    setSearchTerm,
-    filteredRecipes,
-    selectedRecipe,
-    setSelectedRecipe,
-    isModalOpen,
-    setIsModalOpen,
-  };
+	const value: RecipeContextType = {
+		allRecipes,
+		selectedCategory,
+		setSelectedCategory,
+		searchTerm,
+		setSearchTerm,
+		filteredRecipes,
+		selectedRecipe,
+		setSelectedRecipe,
+		isModalOpen,
+		setIsModalOpen,
+	};
 
-  return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
+	return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
 };
 
 export const useRecipeContext = () => {
-  const context = useContext(RecipeContext);
-  if (!context) {
-    throw new Error('useRecipeContext must be used within a RecipeProvider');
-  }
-  return context;
+	const context = useContext(RecipeContext);
+	if (!context) {
+		throw new Error('useRecipeContext must be used within a RecipeProvider');
+	}
+	return context;
 };
-
-
-
