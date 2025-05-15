@@ -33,7 +33,7 @@ export function ForgotPassword() {
 		try {
 			setIsProcessing(true);
 			await sendPasswordResetEmail(auth, emailToSend, {
-				url: `${window.location.origin}/auth/password/reset`,
+				url: `${window.location.origin}/auth/login`,
 			});
 			setIsEmailSent(true);
 			setError('');

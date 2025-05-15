@@ -6,9 +6,44 @@ interface SearchBarProps {
 	categories: string[];
 	selectedCategory: string;
 	onCategoryChange: (category: string) => void;
+	variant?: 'default' | 'modal';
 }
 
-export function SearchBar({ searchTerm, onSearchChange, categories, selectedCategory, onCategoryChange }: SearchBarProps) {
+export function SearchBar({ searchTerm, onSearchChange, categories, selectedCategory, onCategoryChange, variant = 'default' }: SearchBarProps) {
+	if (variant === 'modal') {
+		return (
+			<div className='mb-4'>
+				{/* Barra de pesquisa - sempre visível no modal */}
+				<div className='mb-6'>
+					<div className='relative w-full'>
+						<input
+							type='text'
+							placeholder='Search for a recipe'
+							value={searchTerm}
+							onChange={e => onSearchChange(e.target.value)}
+							className='w-full pr-10 pl-4 py-2 text-sm rounded-lg border border-neutral-200 focus:outline-none focus:ring-1 focus:ring-green-400'
+						/>
+						<MagnifyingGlass size={18} className='absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400' />
+					</div>
+				</div>
+
+				{/* Filtros - estilo compacto para modal */}
+				<div className='flex space-x-6 text-sm mt-1 overflow-x-auto'>
+					{categories.map(cat => (
+						<button
+							key={cat}
+							onClick={() => onCategoryChange(cat)}
+							className={`relative pb-1 font-medium transition cursor-pointer whitespace-nowrap ${selectedCategory === cat ? 'text-green-500' : 'text-neutral-600 hover:text-green-400'}`}
+						>
+							{cat}
+							{selectedCategory === cat && <span className='absolute left-0 bottom-0 w-full h-[1.5px] bg-green-400'></span>}
+						</button>
+					))}
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className='mb-6'>
 			<div className='flex flex-col md:hidden gap-4 mb-4'>
