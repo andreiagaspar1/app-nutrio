@@ -43,6 +43,9 @@ export interface Recipe {
 
 interface RecipeContextType {
 	allRecipes: Recipe[];
+	savedRecipes: Recipe[]; // Nova propriedade
+	addSavedRecipe: (recipe: Recipe) => void; // Nova função
+	removeSavedRecipe: (recipeId: number) => void; // Nova função
 	selectedCategory: string;
 	setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
 	searchTerm: string;
@@ -56,6 +59,9 @@ interface RecipeContextType {
 
 const RecipeContext = createContext<RecipeContextType>({
 	allRecipes: [],
+	savedRecipes: [], 
+	addSavedRecipe: () => {},
+	removeSavedRecipe: () => {},
 	selectedCategory: 'Breakfast',
 	setSelectedCategory: () => {},
 	searchTerm: '',
@@ -395,10 +401,23 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 		},
 	];
 
+    const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState('Breakfast');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const addSavedRecipe = (recipe: Recipe) => {
+		if (!savedRecipes.some(r => r.id === recipe.id)) {
+			setSavedRecipes([...savedRecipes, recipe]);
+		}
+	};
+
+	
+	const removeSavedRecipe = (recipeId: number) => {
+		setSavedRecipes(savedRecipes.filter(r => r.id !== recipeId));
+	};
+
 
 	const filteredRecipes = allRecipes.filter(recipe => {
 		const matchCategory = recipe.category === selectedCategory;
@@ -408,6 +427,9 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 
 	const value: RecipeContextType = {
 		allRecipes,
+		savedRecipes,
+		addSavedRecipe,
+		removeSavedRecipe,
 		selectedCategory,
 		setSelectedCategory,
 		searchTerm,
@@ -418,7 +440,6 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 		isModalOpen,
 		setIsModalOpen,
 	};
-
 	return <RecipeContext.Provider value={value}>{children}</RecipeContext.Provider>;
 };
 
