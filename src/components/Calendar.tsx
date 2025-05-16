@@ -39,7 +39,7 @@ export function WeeklyCalendar({ currentDate, selectedDate, onDateClick, onWeekC
 	const weekDates = getWeekDates(selectedDate);
 
 	return (
-		<div className='mb-8 bg-white rounded-xl p-6 pt-10 pb-10 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
+		<div className='mb-8 bg-white rounded-xl p-6 pt-12 pb-12 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
 			<div className='flex justify-center mb-4 mt-4'>
 				<h2 className='text-sm md:text-lg font-medium text-neutral-800'>{monthYear}</h2>
 			</div>
