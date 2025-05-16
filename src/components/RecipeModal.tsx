@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecipeContext } from '../contexts/appContexts/recipesContext';
 import { X, BookmarkSimple } from '@phosphor-icons/react';
 import { useUserData } from '../hooks/useUserData';
 import { usePlannedMeals } from '../hooks/usePlannedMeals';
 import { AddToPlannerModal } from './AddToPlannerModal'; 
+import { useSavedMeals } from '../hooks/useSavedMeals';
+import { toast } from 'sonner';
 
 export const RecipeModal: React.FC = () => {
 	const { selectedRecipe, isModalOpen, setIsModalOpen } = useRecipeContext();
 	const { userId } = useUserData();
-
+	const { savedMeals, addSavedMeal, removeSavedMeal } = useSavedMeals(userId);
 	const [isAddToPlannerOpen, setIsAddToPlannerOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
-
-	
+	const [isSaved, setIsSaved] = useState(false); 
 	const { addMeal } = usePlannedMeals(userId, selectedDate);
 
-	if (!isModalOpen || !selectedRecipe) return null;
+
+	useEffect(() => {
+		if (selectedRecipe && userId && savedMeals.length >= 0) {
+			const alreadySaved = savedMeals.some(meal => meal.recipeId === selectedRecipe.id);
+			setIsSaved(alreadySaved);
+		}
+	}, [selectedRecipe, savedMeals, userId]);
+
 
 	const handleAddToPlanner = (date: Date, mealType: string) => {
 		if (!selectedRecipe) return;
@@ -32,6 +40,38 @@ export const RecipeModal: React.FC = () => {
 		setIsAddToPlannerOpen(false);
 		setIsModalOpen(false);
 	};
+
+	const handleToggleSave = async () => {
+		if (!selectedRecipe || !userId) return;
+
+		try {
+			if (isSaved) {
+				const mealToRemove = savedMeals.find(meal => meal.recipeId === selectedRecipe.id);
+				if (mealToRemove?.id) {
+					await removeSavedMeal(mealToRemove.id);
+					toast.warning(`${selectedRecipe.name} was removed from saved recipes`);
+					setIsSaved(false); 
+				}
+			} else {
+				const newMeal = {
+					recipeId: selectedRecipe.id,
+					recipeName: selectedRecipe.name,
+					kcal: selectedRecipe.kcal,
+					image: selectedRecipe.image,
+					date: new Date().toISOString().split('T')[0],
+					mealType: 'saved',
+				};
+
+				await addSavedMeal(newMeal);
+				toast.success(`${selectedRecipe.name} was added to your saved recipes`);
+				setIsSaved(true); 
+			}
+		} catch (error) {
+			toast.error('An error occurred while saving the recipe');
+			console.error('Error toggling save:', error);
+		}
+	};
+	if (!isModalOpen || !selectedRecipe) return null;
 
 	return (
 		<>
@@ -51,8 +91,8 @@ export const RecipeModal: React.FC = () => {
 						<div className='flex-1 overflow-y-auto px-6 pt-6 pb-32 bg-white rounded-t-3xl -mt-6 relative z-10'>
 							<div className='flex justify-between items-start mb-4'>
 								<h2 className='text-lg md:text-xl font-semibold flex-1 break-words pr-2'>{selectedRecipe.name}</h2>
-								<button className='text-neutral-300 hover:text-neutral-400 cursor-pointer'>
-									<BookmarkSimple size={28} weight='fill' />
+								<button onClick={handleToggleSave} className={`cursor-pointer ${isSaved ? 'text-neutral-800' : 'text-neutral-300 hover:text-neutral-400'}`}>
+									<BookmarkSimple size={28} weight={isSaved ? 'fill' : 'regular'} />
 								</button>
 							</div>
 
