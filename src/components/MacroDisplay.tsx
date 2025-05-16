@@ -2,7 +2,7 @@ interface MacroDisplayProps {
 	value: number;
 	label: string;
 	icon: string;
-	iconClass?: string; 
+	iconClass?: string;
 }
 
 export function MacroDisplay({ value, label, icon, iconClass = '' }: MacroDisplayProps) {

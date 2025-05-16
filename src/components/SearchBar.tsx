@@ -12,9 +12,9 @@ interface SearchBarProps {
 export function SearchBar({ searchTerm, onSearchChange, categories, selectedCategory, onCategoryChange, variant = 'default' }: SearchBarProps) {
 	if (variant === 'modal') {
 		return (
-			<div className='mb-4'>
-				{/* Barra de pesquisa - sempre visível no modal */}
-				<div className='mb-6'>
+			<div className='mb-5'>
+				
+				<div className='mb-7'>
 					<div className='relative w-full'>
 						<input
 							type='text'
@@ -27,7 +27,7 @@ export function SearchBar({ searchTerm, onSearchChange, categories, selectedCate
 					</div>
 				</div>
 
-				{/* Filtros - estilo compacto para modal */}
+				
 				<div className='flex space-x-6 text-sm mt-1 overflow-x-auto'>
 					{categories.map(cat => (
 						<button

@@ -2,15 +2,10 @@ import React from 'react';
 import { useRecipeContext } from '../contexts/appContexts/recipesContext';
 import { X, BookmarkSimple } from '@phosphor-icons/react';
 
-
-
-
 export const RecipeModal: React.FC = () => {
 	const { selectedRecipe, isModalOpen, setIsModalOpen } = useRecipeContext();
-	
 
 	if (!isModalOpen || !selectedRecipe) return null;
-
 
 	return (
 		<div className='fixed inset-0 z-50'>
@@ -28,7 +23,7 @@ export const RecipeModal: React.FC = () => {
 
 					<div className='flex-1 overflow-y-auto px-6 pt-6 pb-32 bg-white rounded-t-3xl -mt-6 relative z-10'>
 						<div className='flex justify-between items-start mb-4'>
-							<h2 className='text-xl font-semibold flex-1 break-words pr-2'>{selectedRecipe.name}</h2>
+							<h2 className='text-lg md:text-xl font-semibold flex-1 break-words pr-2'>{selectedRecipe.name}</h2>
 							<button className='text-neutral-300 hover:text-neutral-400 cursor-pointer'>
 								<BookmarkSimple size={28} weight='fill' />
 							</button>
@@ -36,33 +31,32 @@ export const RecipeModal: React.FC = () => {
 
 						<div className='flex flex-row gap-3 mb-6 mt-7'>
 							<div className='border border-neutral-400 rounded-md py-3 px-3 text-center w-1/3 flex flex-col justify-center min-h-[80px]'>
-								<p className='font-bold text-md'>{selectedRecipe.kcal} kcal</p>
-								<p className='text-sm text-neutral-600'>Calories</p>
+								<p className='font-bold text-base md:text-md'>{selectedRecipe.kcal} kcal</p>
+								<p className='text-xs md:text-sm text-neutral-600'>Calories</p>
 							</div>
-
 							<div className='border border-neutral-400 rounded-md py-3 px-3 w-2/3 flex flex-col justify-center min-h-[80px]'>
 								<div className='flex justify-between divide-x divide-gray-300 text-center h-full'>
 									<div className='flex-1 px-2 flex flex-col justify-center'>
-										<p className='font-bold text-md'>{selectedRecipe.protein}g</p>
-										<p className='text-sm text-neutral-600'>Protein</p>
+										<p className='font-bold text-base md:text-md'>{selectedRecipe.protein}g</p>
+										<p className='text-xs md:text-sm text-neutral-600'>Protein</p>
 									</div>
 									<div className='flex-1 px-2 flex flex-col justify-center'>
-										<p className='font-bold text-md'>{selectedRecipe.carbs}g</p>
-										<p className='text-sm text-neutral-600'>Carbs</p>
+										<p className='font-bold text-base md:text-md'>{selectedRecipe.carbs}g</p>
+										<p className='text-xs md:text-sm text-neutral-600'>Carbs</p>
 									</div>
 									<div className='flex-1 px-2 flex flex-col justify-center'>
-										<p className='font-bold text-md'>{selectedRecipe.fats}g</p>
-										<p className='text-sm text-neutral-600'>Fats</p>
+										<p className='font-bold text-base md:text-md'>{selectedRecipe.fats}g</p>
+										<p className='text-xs md:text-sm text-neutral-600'>Fats</p>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<div className='mb-6 mt-7'>
-							<h3 className='text-lg font-semibold mb-2'>Ingredients</h3>
+							<h3 className='text-base md:text-lg font-semibold mb-2'>Ingredients</h3>
 							<ul className='space-y-2'>
 								{selectedRecipe.ingredients?.map((ingredient, index) => (
-									<li key={index} className='flex items-start'>
+									<li key={index} className='flex items-start text-sm md:text-base'>
 										<span className='inline-block w-4 h-4 border border-gray-400 rounded-full mt-1 mr-2'></span>
 										<span>{ingredient}</span>
 									</li>
@@ -71,8 +65,8 @@ export const RecipeModal: React.FC = () => {
 						</div>
 
 						<div className='mb-6 mt-10'>
-							<h3 className='text-lg font-semibold mb-2'>Preparation</h3>
-							<ol className='space-y-3'>
+							<h3 className='text-base md:text-lg font-semibold mb-2'>Preparation</h3>
+							<ol className='space-y-3 text-sm md:text-base'>
 								{selectedRecipe.preparation?.map((step, index) => (
 									<li key={index} className='flex'>
 										<span className='font-bold mr-2'>{index + 1}.</span>
@@ -83,7 +77,7 @@ export const RecipeModal: React.FC = () => {
 						</div>
 
 						{selectedRecipe.totalTime && (
-							<div className='text-md text-neutral-500 mt-10'>
+							<div className='text-sm md:text-md text-neutral-500 mt-10'>
 								<span className='font-medium'>Total Time: </span> {selectedRecipe.totalTime}
 							</div>
 						)}
@@ -96,7 +90,6 @@ export const RecipeModal: React.FC = () => {
 					</div>
 				</div>
 			</div>
-
 		</div>
 	);
 };

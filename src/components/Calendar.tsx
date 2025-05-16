@@ -39,12 +39,12 @@ export function WeeklyCalendar({ currentDate, selectedDate, onDateClick, onWeekC
 	const weekDates = getWeekDates(selectedDate);
 
 	return (
-		<div className='mb-8 bg-white rounded-xl p-6 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
+		<div className='mb-8 bg-white rounded-xl p-6 pt-10 pb-10 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
 			<div className='flex justify-center mb-4 mt-4'>
 				<h2 className='text-sm md:text-lg font-medium text-neutral-800'>{monthYear}</h2>
 			</div>
 			<div className='flex items-center justify-between mb-6'>
-				<button onClick={() => onWeekChange(-7)} className='text-neutral-500 hover:text-green-500 p-2' aria-label='Previous week'>
+				<button onClick={() => onWeekChange(-7)} className='text-neutral-500 hover:text-green-500 p-2 cursor-pointer' aria-label='Previous week'>
 					<CaretLeft size={20} />
 				</button>
 
@@ -64,7 +64,7 @@ export function WeeklyCalendar({ currentDate, selectedDate, onDateClick, onWeekC
 					))}
 				</div>
 
-				<button onClick={() => onWeekChange(7)} className='text-neutral-500 hover:text-green-500 p-2' aria-label='Next week'>
+				<button onClick={() => onWeekChange(7)} className='text-neutral-500 hover:text-green-500 p-2 cursor-pointer' aria-label='Next week'>
 					<CaretRight size={20} />
 				</button>
 			</div>

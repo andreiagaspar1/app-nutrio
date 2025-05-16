@@ -1,4 +1,4 @@
-import { Recipe } from '../contexts/appContexts/recipesContext'; // Adjust the import path as needed
+import { Recipe } from '../contexts/appContexts/recipesContext';
 
 interface RecipeCardProps {
 	recipe: Recipe;
@@ -7,7 +7,7 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, onRecipeClick }: RecipeCardProps) {
 	return (
-		<div className='bg-white rounded-xl overflow-hidden relative'>
+		<div className='bg-white rounded-xl overflow-hidden relative border border-neutral-100 shadow-sm'>
 			<button onClick={() => onRecipeClick(recipe)} className='w-full h-45 focus:outline-none cursor-pointer'>
 				<img src={recipe.image.thumbnail} alt={recipe.name} className='w-full h-full object-cover rounded-t-xl' />
 			</button>

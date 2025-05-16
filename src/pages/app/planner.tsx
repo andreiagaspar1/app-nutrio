@@ -1,109 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Plus, Trash } from '@phosphor-icons/react';
 import { WeeklyCalendar } from '../../components/Calendar';
 import { PlannerAddModal } from '../../components/PlannerAddModal';
-import { useRecipeContext, Recipe } from '../../contexts/appContexts/recipesContext';
-import { db } from '../../lib/firebase';
-import { auth } from '../../lib/firebase';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc, getDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { useRecipeContext } from '../../contexts/appContexts/recipesContext';
 import { MealTypeSelectModal } from '../../components/MealTypeModal';
 
-interface PlannedMeal {
-	id?: string;
-	recipeId: number;
-	date: string;
-	mealType: string;
-}
+import { useUserData } from '../../hooks/useUserData';
+import { usePlannedMeals } from '../../hooks/usePlannedMeals';
+import { groupMealsByType, calculateTotalCalories } from '../../utils/mealUtils';
 
 export function Planner() {
 	const { allRecipes } = useRecipeContext();
-	const [userId, setUserId] = useState<string | null>(null);
+
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-	const [selectedMealType, setSelectedMealType] = useState('');
-	const [plannedMeals, setPlannedMeals] = useState<PlannedMeal[]>([]);
-	const [dailyMeals, setDailyMeals] = useState<{ mealType: string; recipes: Recipe[] }[]>([]);
-	const [totalCalories, setTotalCalories] = useState(0);
 	const [isMealTypeModalOpen, setIsMealTypeModalOpen] = useState(false);
+	const [selectedMealType, setSelectedMealType] = useState('');
 	const [selectedRecipeId, setSelectedRecipeId] = useState<number | null>(null);
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, user => {
-			if (user) {
-				setUserId(user.uid);
-			}
-		});
-		return () => unsubscribe();
-    }, []);
-    
-    useEffect(() => {
-			if (!userId) return;
+	const { userId, dailyCalorieGoal } = useUserData();
+	const { plannedMeals, addMeal, removeMeal } = usePlannedMeals(userId, selectedDate);
 
-			const fetchUserData = async () => {
-				try {
-					const userDocRef = doc(db, 'users', userId);
-					const userSnap = await getDoc(userDocRef);
-
-					if (userSnap.exists()) {
-						const userData = userSnap.data();
-						console.log('User data fetched:', userData);
-						if (userData.calories) {
-							setDailyCalorieGoal(userData.calories);
-						} else {
-							console.warn('User calories field not found');
-						}
-					} else {
-						console.warn('User document not found');
-					}
-				} catch (error) {
-					console.error('Error fetching user data:', error);
-				}
-			};
-
-			fetchUserData();
-		}, [userId]);
-
-    const formatDate = (date: Date) => date.toISOString().split('T')[0];
-    const [dailyCalorieGoal, setDailyCalorieGoal] = useState<number | null>(null);
-
-	useEffect(() => {
-		const loadMeals = async () => {
-			if (!userId) return;
-			const q = query(collection(db, 'users', userId, 'plannedMeals'), where('date', '==', formatDate(selectedDate)));
-			const snapshot = await getDocs(q);
-			const meals: PlannedMeal[] = snapshot.docs.map(doc => ({
-				id: doc.id,
-				...doc.data(),
-			})) as PlannedMeal[];
-			setPlannedMeals(meals);
-		};
-		loadMeals();
-	}, [userId, selectedDate]);
-
-	useEffect(() => {
-		const selectedDateStr = formatDate(selectedDate);
-		const mealsForDate = plannedMeals.filter(meal => meal.date === selectedDateStr);
-
-		const groupedMeals = ['Breakfast', 'Snacks', 'Lunch', 'Dinner'].map(mealType => {
-			const recipes = mealsForDate
-				.filter(meal => meal.mealType === mealType)
-				.map(meal => allRecipes.find(recipe => recipe.id === meal.recipeId))
-				.filter((recipe): recipe is Recipe => recipe !== undefined);
-
-			return { mealType, recipes };
-		});
-
-		setDailyMeals(groupedMeals);
-
-		const calories = groupedMeals.reduce((total, meal) => {
-			const mealCalories = meal.recipes.reduce((sum, recipe) => sum + (recipe?.kcal || 0), 0);
-			return total + mealCalories;
-		}, 0);
-
-		setTotalCalories(calories);
-	}, [plannedMeals, selectedDate, allRecipes]);
+	const dailyMeals = groupMealsByType(plannedMeals, allRecipes, selectedDate);
+	const totalCalories = calculateTotalCalories(dailyMeals);
 
 	const handleAddRecipe = (mealType: string) => {
 		setSelectedMealType(mealType);
@@ -129,29 +49,22 @@ export function Planner() {
 		}
 	};
 
-	const addRecipeToPlanner = async (recipeId: number, mealType: string) => {
-		if (!userId) return;
+	const addRecipeToPlanner = (recipeId: number, mealType: string) => {
+		const recipe = allRecipes.find(r => r.id === recipeId);
+		if (!recipe || !userId) return;
 
 		const newMeal = {
 			recipeId,
-			date: formatDate(selectedDate),
+			recipeName: recipe.name,
+			kcal: recipe.kcal,
 			mealType: mealType || 'Planner',
+			date: selectedDate.toISOString().split('T')[0],
 		};
 
-		const docRef = await addDoc(collection(db, 'users', userId, 'plannedMeals'), newMeal);
-		setPlannedMeals(prev => [...prev, { ...newMeal, id: docRef.id }]);
+		addMeal(newMeal);
 	};
-
-	const removeRecipe = async (recipeId: number, mealType: string) => {
-		if (!userId) return;
-
-		const selectedDateStr = formatDate(selectedDate);
-		const mealToDelete = plannedMeals.find(meal => meal.recipeId === recipeId && meal.mealType === mealType && meal.date === selectedDateStr);
-
-		if (mealToDelete?.id) {
-			await deleteDoc(doc(db, 'users', userId, 'plannedMeals', mealToDelete.id));
-			setPlannedMeals(prev => prev.filter(meal => meal.id !== mealToDelete.id));
-		}
+	const handleRemoveRecipe = (recipeId: number, mealType: string) => {
+		removeMeal(recipeId, mealType);
 	};
 
 	const navigateWeek = (days: number) => {
@@ -171,13 +84,10 @@ export function Planner() {
 	const isToday = (date: Date) => {
 		const today = new Date();
 		return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
-    };
-    
-    console.log('dailyCalorieGoal:', dailyCalorieGoal);
-		console.log('totalCalories:', totalCalories);
+	};
 
 	return (
-		<div className='max-w-3xl mx-auto py-6 px-4'>
+		<section>
 			<h1 className='text-base md:text-xl font-semibold mb-6'>Meal Planner</h1>
 
 			<WeeklyCalendar currentDate={currentDate} selectedDate={selectedDate} onDateClick={handleDateClick} onWeekChange={navigateWeek} />
@@ -218,10 +128,10 @@ export function Planner() {
 												<img src={recipe.image?.thumbnail || '/placeholder-image.jpg'} alt={recipe.name} className='w-full h-full rounded-md object-cover' />
 											</div>
 											<div className='flex-1 min-w-0'>
-												<p className='text-sm font-medium truncate mb-1'>{recipe.name}</p>
+												<p className='text-sm font-medium line-clamp-2 mb-1'>{recipe.name}</p>
 												<p className='text-xs text-neutral-500'>{recipe.kcal} kcal</p>
 											</div>
-											<button onClick={() => removeRecipe(recipe.id, mealType)} className='text-red-400 hover:text-red-500 cursor-pointer flex-shrink-0'>
+											<button onClick={() => handleRemoveRecipe(recipe.id, mealType)} className='text-red-400 hover:text-red-500 cursor-pointer flex-shrink-0'>
 												<Trash size={16} />
 											</button>
 										</li>
@@ -237,7 +147,7 @@ export function Planner() {
 				))}
 			</div>
 
-			<div className='mt-6 pt-4 border-t border-neutral-200 flex justify-end'>
+			<div className='mt-6 pt-4 border-t border-neutral-200 flex justify-end mb-8'>
 				<div className='text-sm font-medium text-black'>
 					Total calories:{' '}
 					<span className={`font-bold ${dailyCalorieGoal !== null && totalCalories > dailyCalorieGoal ? 'text-red-500' : 'text-green-500'}`}>
@@ -250,6 +160,6 @@ export function Planner() {
 			<PlannerAddModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} mealType={selectedMealType} onAddRecipe={handleRecipeClick} />
 
 			<MealTypeSelectModal isOpen={isMealTypeModalOpen} onClose={() => setIsMealTypeModalOpen(false)} onSelectMealType={addRecipeWithMealType} />
-		</div>
+		</section>
 	);
 }
