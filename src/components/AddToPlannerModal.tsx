@@ -62,7 +62,7 @@ export function AddToPlannerModal({ isOpen, onClose, onAdd, selectedDate, onDate
 				<button
 					onClick={() => {
 						onAdd(selectedDate, mealType);
-						toast.success(`"${selectedRecipeName}" was added to ${mealType.toLowerCase()}.`);
+						toast.success(`${selectedRecipeName} was added to ${mealType.toLowerCase()}.`);
 					}}
 					className='
             w-full py-3 bg-green-400 hover:bg-green-500 

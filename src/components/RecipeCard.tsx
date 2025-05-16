@@ -3,9 +3,10 @@ import { Recipe } from '../contexts/appContexts/recipesContext';
 interface RecipeCardProps {
 	recipe: Recipe;
 	onRecipeClick: (recipe: Recipe) => void;
+	onQuickAddClick?: (recipe: Recipe) => void; 
 }
 
-export function RecipeCard({ recipe, onRecipeClick }: RecipeCardProps) {
+export function RecipeCard({ recipe, onRecipeClick, onQuickAddClick }: RecipeCardProps) {
 	return (
 		<div className='bg-white rounded-xl overflow-hidden relative border border-neutral-100 shadow-sm'>
 			<button onClick={() => onRecipeClick(recipe)} className='w-full h-45 focus:outline-none cursor-pointer'>
@@ -15,7 +16,13 @@ export function RecipeCard({ recipe, onRecipeClick }: RecipeCardProps) {
 				<h3 className='text-sm font-semibold mb-1'>{recipe.name}</h3>
 				<p className='text-xs text-neutral-600 mb-2'>{recipe.kcal} kcal</p>
 			</div>
-			<button className='absolute bottom-4 right-4 bg-green-400/30 hover:bg-green-400 text-green-600 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xl transition-colors duration-200 cursor-pointer'>
+			<button
+				onClick={e => {
+					e.stopPropagation();
+					onQuickAddClick?.(recipe);
+				}}
+				className='absolute bottom-4 right-4 bg-green-400/30 hover:bg-green-400 text-green-600 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-xl transition-colors duration-200 cursor-pointer'
+			>
 				+
 			</button>
 		</div>

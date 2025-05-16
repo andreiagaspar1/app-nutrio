@@ -3,7 +3,7 @@ import { useRecipeContext } from '../contexts/appContexts/recipesContext';
 import { X, BookmarkSimple } from '@phosphor-icons/react';
 import { useUserData } from '../hooks/useUserData';
 import { usePlannedMeals } from '../hooks/usePlannedMeals';
-import { AddToPlannerModal } from './AddToPlannerModal'; // Ajuste caminho conforme necessário
+import { AddToPlannerModal } from './AddToPlannerModal'; 
 
 export const RecipeModal: React.FC = () => {
 	const { selectedRecipe, isModalOpen, setIsModalOpen } = useRecipeContext();
@@ -12,7 +12,7 @@ export const RecipeModal: React.FC = () => {
 	const [isAddToPlannerOpen, setIsAddToPlannerOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 
-	// Passa userId e selectedDate para buscar ou adicionar refeições planejadas
+	
 	const { addMeal } = usePlannedMeals(userId, selectedDate);
 
 	if (!isModalOpen || !selectedRecipe) return null;
@@ -25,7 +25,7 @@ export const RecipeModal: React.FC = () => {
 			recipeName: selectedRecipe.name,
 			kcal: selectedRecipe.kcal,
 			mealType,
-			date: date.toISOString().split('T')[0], // Formato YYYY-MM-DD
+			date: date.toISOString().split('T')[0], 
 		};
 
 		addMeal(newMeal);
