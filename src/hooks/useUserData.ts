@@ -5,6 +5,7 @@ import { auth, db } from '../lib/firebase';
 
 export function useUserData() {
 	const [userId, setUserId] = useState<string | null>(null);
+	const [userName, setUserName] = useState<string | null>(null);
 	const [dailyCalorieGoal, setDailyCalorieGoal] = useState<number | null>(null);
 	const [proteinGoal, setProteinGoal] = useState<number | null>(null);
 	const [carbsGoal, setCarbsGoal] = useState<number | null>(null);
@@ -17,11 +18,20 @@ export function useUserData() {
 				const userSnap = await getDoc(doc(db, 'users', user.uid));
 				if (userSnap.exists()) {
 					const data = userSnap.data();
+					setUserName(data?.userName || user.displayName || null);
 					setDailyCalorieGoal(data?.calories ?? null);
 					setProteinGoal(data?.proteins ?? null);
 					setCarbsGoal(data?.carbs ?? null);
 					setFatGoal(data?.fats ?? null);
 				}
+			} else {
+               
+				setUserId(null);
+				setUserName(null);
+				setDailyCalorieGoal(null);
+				setProteinGoal(null);
+				setCarbsGoal(null);
+				setFatGoal(null);
 			}
 		});
 		return () => unsubscribe();
@@ -29,6 +39,7 @@ export function useUserData() {
 
 	return {
 		userId,
+		userName,
 		dailyCalorieGoal,
 		proteinGoal,
 		carbsGoal,

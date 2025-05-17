@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase'; // ajuste o caminho para o seu arquivo firebase.ts
+import { auth } from '../../lib/firebase'; 
 
 interface AuthContextType {
 	user: User | null;

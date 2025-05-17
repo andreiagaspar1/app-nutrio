@@ -48,7 +48,7 @@ export function Saved() {
 				</button>
 			</div>
 
-			<div className='bg-white rounded-xl p-6 mb-10 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
+			<div className='bg-white rounded-xl p-6 mb-10 mt-7 shadow-[0_0_6px_0_rgba(0,0,0,0.1)]'>
 				{savedMeals.length > 0 ? (
 					<ul className='space-y-3'>
 						{savedMeals.map(meal => {

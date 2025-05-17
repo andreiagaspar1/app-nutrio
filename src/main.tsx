@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router';
 import { Toaster } from 'sonner';
 import { router } from './router';
 import { UserDataProvider } from './contexts/authContexts/registrationContext';
+import {AuthProvider} from './contexts/authContexts/authContext'
 import { EmailProvider } from './contexts/authContexts/passwordForgotContext';
 import { RecipeProvider } from './contexts/appContexts/recipesContext';
 import './styles/global.css';
@@ -11,12 +12,14 @@ import './styles/global.css';
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<UserDataProvider>
-			<EmailProvider>
-				<RecipeProvider>
+			<AuthProvider>
+				<EmailProvider>
+					<RecipeProvider>
 						<RouterProvider router={router} />
 						<Toaster richColors />
-				</RecipeProvider>
-			</EmailProvider>
+					</RecipeProvider>
+				</EmailProvider>
+			</AuthProvider>
 		</UserDataProvider>
 	</StrictMode>,
 );

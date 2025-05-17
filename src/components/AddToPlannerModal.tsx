@@ -45,7 +45,7 @@ export function AddToPlannerModal({ isOpen, onClose, onAdd, selectedDate, onDate
 				<WeeklyCalendar currentDate={currentDate} selectedDate={selectedDate} onDateClick={handleDateClick} onWeekChange={navigateWeek} />
 
 				<div className='grid grid-cols-2 gap-2 my-4 mb-8'>
-					{['Breakfast', 'Lunch', 'Dinner', 'Snack'].map(type => (
+					{['Breakfast', 'Lunch', 'Dinner', 'Snacks'].map(type => (
 						<button
 							key={type}
 							onClick={() => setMealType(type)}
