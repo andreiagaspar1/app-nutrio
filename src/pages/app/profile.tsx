@@ -11,7 +11,6 @@ import ProfileImg from '../../assets/default-profile-image.jpg';
 import { LogOutModal } from '../../components/LogOutModal';
 import { useNavigate } from 'react-router-dom';
 
-
 interface UserData {
 	name: string;
 	email: string;
@@ -65,14 +64,15 @@ export function Profile() {
 						setAge(data.age?.toString() || '');
 						setHeight(data.height?.toString() || '');
 						setWeight(data.weight?.toString() || '');
-						setActivityLevel(data.activity || '');
-						setGoal(data.goal || '');
+
+						
+						setActivityLevel(data.activity === 'very-active' ? 'active' : data.activity || '');
+						setGoal(data.goal === 'build' ? 'gain' : data.goal || '');
 
 						if (data.profileImage) {
 							setProfileImage(data.profileImage);
 						}
 
-						// Atualiza o contexto com os dados do Firebase
 						updateUserData({
 							...data,
 							proteins: data.proteins || 0,
@@ -103,8 +103,8 @@ export function Profile() {
 				age: parseInt(age) || 0,
 				height: parseInt(height) || 0,
 				weight: parseInt(weight) || 0,
-				activity: activityLevel,
-				goal,
+				activity: activityLevel === 'active' ? 'very-active' : activityLevel,
+				goal: goal === 'gain' ? 'build' : goal,
 				proteins: contextUserData?.proteins || 0,
 				carbs: contextUserData?.carbs || 0,
 				fats: contextUserData?.fats || 0,
@@ -131,8 +131,8 @@ export function Profile() {
 				age: parseInt(age) || 0,
 				height: parseInt(height) || 0,
 				weight: parseInt(weight) || 0,
-				activity: activityLevel,
-				goal,
+				activity: activityLevel === 'active' ? 'very-active' : activityLevel,
+				goal: goal === 'gain' ? 'build' : goal,
 				proteins: contextUserData?.proteins || 0,
 				carbs: contextUserData?.carbs || 0,
 				fats: contextUserData?.fats || 0,
@@ -311,37 +311,21 @@ export function Profile() {
 				<div className='grid grid-cols-3 gap-4 mb-4'>
 					<div>
 						<div className='text-neutral-700 font-medium text-sm md:text-base mb-1'>Protein</div>
-						<input
-							value={contextUserData?.proteins || 0}
-							onChange={e => updateUserData({ ...contextUserData, proteins: parseInt(e.target.value) || 0 })}
-							className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400'
-						/>
+						<input readOnly value={contextUserData?.proteins || 0} className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400' />
 					</div>
 					<div>
 						<div className='text-neutral-700 font-medium text-sm md:text-base mb-1'>Carbs</div>
-						<input
-							value={contextUserData?.carbs || 0}
-							onChange={e => updateUserData({ ...contextUserData, carbs: parseInt(e.target.value) || 0 })}
-							className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400'
-						/>
+						<input readOnly value={contextUserData?.carbs || 0} className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400' />
 					</div>
 					<div>
 						<div className='text-neutral-700 font-medium text-sm md:text-base mb-1'>Fats</div>
-						<input
-							value={contextUserData?.fats || 0}
-							onChange={e => updateUserData({ ...contextUserData, fats: parseInt(e.target.value) || 0 })}
-							className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400'
-						/>
+						<input readOnly value={contextUserData?.fats || 0} className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400' />
 					</div>
 				</div>
 
 				<div>
 					<div className='text-neutral-700 font-medium text-sm md:text-base mb-1'>Daily Calories</div>
-					<input
-						value={contextUserData?.calories || 0}
-						onChange={e => updateUserData({ ...contextUserData, calories: parseInt(e.target.value) || 0 })}
-						className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400'
-					/>
+					<input readOnly value={contextUserData?.calories || 0} className='text-sm md:text-base w-full px-3 py-2 bg-neutral-100 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400' />
 				</div>
 			</div>
 
@@ -365,5 +349,4 @@ export function Profile() {
 			<LogOutModal show={showLogoutModal} onCancel={() => setShowLogoutModal(false)} onConfirm={handleLogout} />
 		</section>
 	);
-
 }

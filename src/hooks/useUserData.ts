@@ -3,47 +3,68 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 
-export function useUserData() {
-	const [userId, setUserId] = useState<string | null>(null);
-	const [userName, setUserName] = useState<string | null>(null);
-	const [dailyCalorieGoal, setDailyCalorieGoal] = useState<number | null>(null);
-	const [proteinGoal, setProteinGoal] = useState<number | null>(null);
-	const [carbsGoal, setCarbsGoal] = useState<number | null>(null);
-	const [fatGoal, setFatGoal] = useState<number | null>(null);
+interface UserData {
+	userId: string | null;
+	userName: string | null;
+	dailyCalorieGoal: number | null;
+	proteinGoal: number | null;
+	carbsGoal: number | null;
+	fatGoal: number | null;
+}
+
+export function useUserData(): UserData {
+	const [userData, setUserData] = useState<UserData>({
+		userId: null,
+		userName: null,
+		dailyCalorieGoal: null,
+		proteinGoal: null,
+		carbsGoal: null,
+		fatGoal: null,
+	});
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, async user => {
 			if (user) {
-				setUserId(user.uid);
-				const userSnap = await getDoc(doc(db, 'users', user.uid));
-				if (userSnap.exists()) {
-					const data = userSnap.data();
-					setUserName(data?.userName || user.displayName || null);
-					setDailyCalorieGoal(data?.calories ?? null);
-					setProteinGoal(data?.proteins ?? null);
-					setCarbsGoal(data?.carbs ?? null);
-					setFatGoal(data?.fats ?? null);
+				try {
+					const userSnap = await getDoc(doc(db, 'users', user.uid));
+
+					if (userSnap.exists()) {
+						const data = userSnap.data();
+						setUserData({
+							userId: user.uid,
+							userName: data.name || user.displayName || 'User',
+							dailyCalorieGoal: data.calories ?? null,
+							proteinGoal: data.proteins ?? null,
+							carbsGoal: data.carbs ?? null,
+							fatGoal: data.fats ?? null,
+						});
+					} else {
+						setUserData({
+							userId: user.uid,
+							userName: user.displayName || 'User',
+							dailyCalorieGoal: null,
+							proteinGoal: null,
+							carbsGoal: null,
+							fatGoal: null,
+						});
+					}
+				} catch (error) {
+					console.error('Error fetching user data:', error);
 				}
 			} else {
-               
-				setUserId(null);
-				setUserName(null);
-				setDailyCalorieGoal(null);
-				setProteinGoal(null);
-				setCarbsGoal(null);
-				setFatGoal(null);
+				setUserData({
+					userId: null,
+					userName: null,
+					dailyCalorieGoal: null,
+					proteinGoal: null,
+					carbsGoal: null,
+					fatGoal: null,
+				});
 			}
 		});
-		return () => unsubscribe();
+
+		return unsubscribe;
 	}, []);
 
-	return {
-		userId,
-		userName,
-		dailyCalorieGoal,
-		proteinGoal,
-		carbsGoal,
-		fatGoal,
-	};
+	return userData;
 }
-

@@ -139,12 +139,6 @@ export function Login() {
 						{errors.password && <p className='mt-1 text-sm text-red-500'>{errors.password.message}</p>}
 
 						<div className='flex items-center justify-between mt-4 mb-10'>
-							<div className='flex items-center'>
-								<input type='checkbox' id='remember' className='w-4 h-4 rounded border-neutral-500 focus:ring-green-400' />
-								<label htmlFor='remember' className='ml-2 text-neutral-600 text-sm'>
-									Remember me
-								</label>
-							</div>
 							<Link to='/auth/password/forgot' className='text-neutral-600 text-sm hover:underline'>
 								Forgot your password?
 							</Link>
@@ -181,7 +175,7 @@ export function Login() {
 
 				<div className='text-center text-sm text-neutral-600 pt-2 mt-5'>
 					Don't have an account?{' '}
-					<Link to='/auth/register' className='text-green-400 hover:underline'>
+					<Link to='/auth/register' className='text-green-400 underline underline-offset-2'>
 						Sign up
 					</Link>
 				</div>

@@ -45,7 +45,7 @@ export function HomePage() {
 			<section className='mb-8'>
 				<h1 className='text-base md:text-xl font-semibold mb-7'>
 					{getGreeting()}
-					{userName ? `, ${userName}` : ', Name'}
+					{userName ? `, ${userName}` : ''}
 				</h1>
 				<MacrosCard
 					date={formattedDate}

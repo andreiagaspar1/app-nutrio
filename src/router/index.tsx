@@ -15,7 +15,7 @@ import { Profile } from '../pages/app/profile';
 export const router = createBrowserRouter([
 	{
 		path: '/',
-		element: <Navigate to='/auth/login' replace />, // ✅ default route to login
+		element: <Navigate to='/auth/login' replace />, 
 	},
 	{
 		path: '/auth',
