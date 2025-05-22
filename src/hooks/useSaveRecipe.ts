@@ -1,16 +1,15 @@
 import { useCallback, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useSavedMeals } from './useSavedMeals';
-import {Recipe} from '../contexts/appContexts/recipesContext'
+import { Recipe } from '../contexts/appContexts/recipesContext';
 
 export const useSaveRecipe = (userId: string | null, recipe: Recipe | null) => {
 	const { savedMeals, addSavedMeal, removeSavedMeal } = useSavedMeals(userId);
 	const [isSaved, setIsSaved] = useState(false);
 
 	useEffect(() => {
-		if (recipe && userId && savedMeals.length >= 0) {
-			const alreadySaved = savedMeals.some(meal => meal.recipeId === recipe.id);
-			setIsSaved(alreadySaved);
+		if (recipe && userId) {
+			setIsSaved(savedMeals.some(meal => meal.recipeId === recipe.id));
 		}
 	}, [recipe, savedMeals, userId]);
 
@@ -30,9 +29,9 @@ export const useSaveRecipe = (userId: string | null, recipe: Recipe | null) => {
 					recipeId: recipe.id,
 					recipeName: recipe.name,
 					kcal: recipe.kcal,
-					image: recipe.image,
 					date: new Date().toISOString().split('T')[0],
 					mealType: 'saved',
+					createdAt: new Date(), 
 				};
 				await addSavedMeal(newMeal);
 				toast.success(`${recipe.name} was added to your saved recipes`);

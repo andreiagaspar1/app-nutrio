@@ -5,15 +5,15 @@ import { useUserData } from '../hooks/useUserData';
 import { usePlannedMeals } from '../hooks/usePlannedMeals';
 import { AddToPlannerModal } from './AddToPlannerModal';
 import { toast } from 'sonner';
-import { useSaveRecipe } from '../hooks/useSaveRecipe';
+import { useSavedMeals } from '../hooks/useSavedMeals';
 
 export const RecipeModal: React.FC = () => {
 	const { selectedRecipe, isModalOpen, setIsModalOpen } = useRecipeContext();
 	const { userId } = useUserData();
-	const { isSaved, handleToggleSave } = useSaveRecipe(userId, selectedRecipe);
 	const [isAddToPlannerOpen, setIsAddToPlannerOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const { addMeal } = usePlannedMeals(userId, selectedDate);
+	const { savedMeals, addSavedMeal } = useSavedMeals(userId);
 
 	const handleAddToPlanner = (date: Date, mealType: string) => {
 		if (!selectedRecipe) return;
@@ -29,7 +29,29 @@ export const RecipeModal: React.FC = () => {
 		addMeal(newMeal);
 		setIsAddToPlannerOpen(false);
 		setIsModalOpen(false);
-		toast.success(`${selectedRecipe.name} added to your meal plan!`);
+	};
+
+	const handleSaveRecipe = () => {
+		if (!selectedRecipe || !userId) return;
+
+		const alreadySaved = savedMeals.some(meal => meal.recipeId === selectedRecipe.id);
+
+		if (alreadySaved) {
+			toast.error('Recipe already saved.');
+			return;
+		}
+
+		const newMeal = {
+			recipeId: selectedRecipe.id,
+			recipeName: selectedRecipe.name,
+			kcal: selectedRecipe.kcal,
+			date: new Date().toISOString().split('T')[0],
+			mealType: 'saved',
+			createdAt: new Date(),
+		};
+
+		addSavedMeal(newMeal);
+		toast.success('Recipe saved!');
 	};
 
 	if (!isModalOpen || !selectedRecipe) return null;
@@ -53,11 +75,11 @@ export const RecipeModal: React.FC = () => {
 							<div className='flex justify-between items-start mb-4'>
 								<h2 className='text-lg md:text-xl font-semibold flex-1 break-words pr-2'>{selectedRecipe.name}</h2>
 								<button
-									onClick={handleToggleSave}
-									className={`cursor-pointer ${isSaved ? 'text-neutral-800' : 'text-neutral-300 hover:text-neutral-400'}`}
-									aria-label={isSaved ? 'Remove from saved recipes' : 'Save recipe'}
+									onClick={handleSaveRecipe}
+									className={`cursor-pointer ${savedMeals.some(meal => meal.recipeId === selectedRecipe.id) ? 'text-neutral-800' : 'text-neutral-300 hover:text-neutral-400'}`}
+									aria-label={'Save recipe'}
 								>
-									<BookmarkSimple size={28} weight={isSaved ? 'fill' : 'regular'} />
+									<BookmarkSimple size={28} weight={savedMeals.some(meal => meal.recipeId === selectedRecipe.id) ? 'fill' : 'regular'} />
 								</button>
 							</div>
 
@@ -117,7 +139,7 @@ export const RecipeModal: React.FC = () => {
 
 						<div className='absolute bottom-16 left-0 right-0 h-25 bg-gradient-to-t from-white to-transparent pointer-events-none z-10'></div>
 
-						<div className='sticky bottom-0 left-0 right-0 bg-white p-6 z-20'>
+						<div className='sticky bottom-0 left-0 right-0 bg-white p-6 z-20 sm:mb-6'>
 							<button onClick={() => setIsAddToPlannerOpen(true)} className='w-full bg-green-400 hover:bg-green-500 text-white py-3 rounded-lg font-medium transition-colors cursor-pointer'>
 								Add to Meal Plan
 							</button>
