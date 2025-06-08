@@ -84,7 +84,7 @@ export function ForgotPassword() {
 					<ArrowLeft size={18} className='mr-2' />
 					Back to
 					<span className='mx-2'>
-						<Link to='/auth/login' className='text-green-400 hover:underline'>
+						<Link to='/auth/login' className='text-green-400 underline hover:underline'>
 							Log in
 						</Link>
 					</span>
@@ -132,7 +132,7 @@ export function ForgotPassword() {
 					<ArrowLeft size={18} className='mr-2' />
 					Back to
 					<span className='mx-2'>
-						<Link to='/auth/login' className='text-green-400 hover:underline'>
+						<Link to='/auth/login' className='text-green-400 underline underline-offset-2'>
 							Log in
 						</Link>
 					</span>

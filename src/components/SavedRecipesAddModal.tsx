@@ -21,7 +21,7 @@ export function SavedRecipesAddModal({ isOpen, onClose, onAddRecipe, }: SavedRec
 		<div className='fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
 			<div className='bg-white rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col'>
 				<div className='flex justify-between items-center pt-6 px-6'>
-					<h2 className='text-lg font-semibold'>Add Recipe to Planner</h2>
+					<h2 className='text-lg font-semibold'>Add Recipe to Saved Recipes</h2>
 					<button onClick={onClose} className='text-neutral-500 hover:text-neutral-700 cursor-pointer'>
 						<X size={24} />
 					</button>
